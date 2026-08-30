@@ -5,31 +5,53 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                echo 'Checking out source code...'
+                echo 'Code checkout completed'
             }
         }
 
-        stage('Maven Build') {
+        stage('Maven Version') {
+            steps {
+                sh 'mvn -version'
+            }
+        }
+
+        stage('Build') {
             steps {
                 sh 'mvn clean package'
             }
         }
 
-        stage('Archive Artifact') {
+        stage('Test') {
             steps {
-                archiveArtifacts artifacts: 'target/*.jar',
-                           fingerprint: true
+                sh 'mvn test'
+            }
+        }
+
+        stage('Package') {
+            steps {
+                echo 'Maven package created successfully'
+                sh 'ls -la target/'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application...'
             }
         }
     }
 
     post {
         success {
-            echo 'Upstream Maven Build Successful!'
+            echo 'Maven Pipeline completed successfully!'
         }
 
         failure {
-            echo 'Upstream Maven Build Failed!'
+            echo 'Maven Pipeline failed!'
+        }
+
+        always {
+            echo 'Pipeline execution finished.'
         }
     }
 }
