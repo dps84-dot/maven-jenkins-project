@@ -3,33 +3,21 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
+        stage('Deploy') {
             steps {
-                echo 'Checking out source code...'
-            }
-        }
-
-        stage('Maven Build') {
-            steps {
-                sh 'mvn clean package'
-            }
-        }
-
-        stage('Archive Artifact') {
-            steps {
-                archiveArtifacts artifacts: 'target/*.jar',
-                           fingerprint: true
+                echo 'Downstream deployment started...'
+                echo 'Application deployed successfully!'
             }
         }
     }
 
     post {
         success {
-            echo 'Upstream Maven Build Successful!'
+            echo 'Downstream Job Successful!'
         }
 
         failure {
-            echo 'Upstream Maven Build Failed!'
+            echo 'Downstream Job Failed!'
         }
     }
 }
